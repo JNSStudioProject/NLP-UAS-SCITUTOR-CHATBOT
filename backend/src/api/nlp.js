@@ -1,6 +1,6 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
-const OnnxSingleton = require('../services/OnnxSingleton');
+const HfInferenceService = require('../services/HfInferenceService');
 const tokenGuard = require('../services/tokenGuard');
 const { verifyAccessToken } = require('../middleware/authMiddleware');
 const { MAX_INPUT_TOKENS } = require('../core/config');
@@ -33,7 +33,7 @@ router.post('/predict', verifyAccessToken, predictRateLimit, async (req, res) =>
   }
 
   try {
-    const singleton = await OnnxSingleton.getInstance();
+    const singleton = await HfInferenceService.getInstance();
     
     if (singleton._state !== 'READY') {
       return res.status(503).json({ error: { code: 'MODEL_NOT_READY', message: 'Model initializing' } });
