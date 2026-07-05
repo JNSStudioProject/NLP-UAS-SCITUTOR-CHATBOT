@@ -5,7 +5,7 @@ const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 
 const config = require('./core/config');
-const OnnxSingleton = require('./services/OnnxSingleton');
+const HfInferenceService = require('./services/HfInferenceService');
 const nlpRouter = require('./api/nlp');
 
 const app = express();
@@ -36,9 +36,9 @@ const shutdownSequence = async () => {
   server.close(async () => {
     console.log('HTTP connections closed.');
     try {
-      if (OnnxSingleton._instance) {
-        await OnnxSingleton._instance.destroy();
-        console.log('ONNX Singleton runtime destroyed. Memory released.');
+      if (HfInferenceService._instance) {
+        await HfInferenceService._instance.destroy();
+        console.log('HfInferenceService cleaned up.');
       }
       process.exit(0);
     } catch (err) {
@@ -59,11 +59,11 @@ process.on('SIGINT', shutdownSequence);
 process.on('unhandledRejection', async (reason) => {
   console.error('Unhandled Promise Rejection:', reason);
   try {
-    if (OnnxSingleton._instance) {
-      await OnnxSingleton._instance.destroy();
+    if (HfInferenceService._instance) {
+      await HfInferenceService._instance.destroy();
     }
   } catch (e) {
-    console.error('Failed to cleanup ONNX instance on unhandled rejection:', e);
+    console.error('Failed to cleanup HfInferenceService instance on unhandled rejection:', e);
   }
   process.exit(1);
 });
