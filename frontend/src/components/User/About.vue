@@ -1,0 +1,209 @@
+<template>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16 bg-slate-50 min-h-screen">
+    <!-- Page Header -->
+    <div class="text-center max-w-3xl mx-auto mb-16">
+      <h1 class="text-4xl font-extrabold text-slate-900 tracking-tight sm:text-5xl mb-4">
+        About This System
+      </h1>
+      <p class="text-lg text-slate-600 leading-relaxed">
+        Learn about the technology, objectives, and limitations behind the Science Learning Question Answering System.
+      </p>
+    </div>
+
+    <!-- Main Grid Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+      
+      <!-- Left Column -->
+      <div class="space-y-8">
+        
+        <!-- SYSTEM DESCRIPTION -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+            <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">What is this system?</h2>
+          </div>
+          <div class="p-6">
+            <div class="prose prose-slate prose-sm sm:prose-base">
+              <p>
+                <strong>SciTutor</strong> is an intelligent educational platform designed to assist students and educators in exploring science subjects. By leveraging modern Natural Language Processing (NLP), the system allows users to ask science-related questions in plain English and receive instant, AI-generated answers.
+              </p>
+              <p>
+                Our target users include middle-school to university-level students seeking independent learning support, as well as lecturers looking for an automated tool to assist with common factual inquiries.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- NLP TECHNOLOGY USED -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+            <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Technology Stack</h2>
+          </div>
+          <div class="p-0">
+            <dl class="divide-y divide-slate-100">
+              <div class="px-6 py-4 grid grid-cols-3 gap-4">
+                <dt class="text-sm font-medium text-slate-500">NLP Framework</dt>
+                <dd class="text-sm text-slate-900 col-span-2">Hugging Face Transformers / ONNX Runtime</dd>
+              </div>
+              <div class="px-6 py-4 grid grid-cols-3 gap-4 bg-slate-50/30">
+                <dt class="text-sm font-medium text-slate-500">NLP Task</dt>
+                <dd class="text-sm text-slate-900 col-span-2">Question Answering (Text-to-Text)</dd>
+              </div>
+              <div class="px-6 py-4 grid grid-cols-3 gap-4">
+                <dt class="text-sm font-medium text-slate-500">Architecture</dt>
+                <dd class="text-sm text-slate-900 col-span-2">Encoder-Decoder (Seq2Seq)</dd>
+              </div>
+              <div class="px-6 py-4 grid grid-cols-3 gap-4 bg-slate-50/30">
+                <dt class="text-sm font-medium text-slate-500">Backend</dt>
+                <dd class="text-sm text-slate-900 col-span-2">Node.js · Express</dd>
+              </div>
+              <div class="px-6 py-4 grid grid-cols-3 gap-4">
+                <dt class="text-sm font-medium text-slate-500">Frontend</dt>
+                <dd class="text-sm text-slate-900 col-span-2">Vue 3 · Tailwind CSS</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        <!-- LIMITATIONS -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+            <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Known Limitations</h2>
+          </div>
+          <div class="p-6">
+            <ul class="space-y-3">
+              <li class="flex items-start">
+                <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm text-slate-700"><strong>42-token input cap:</strong> Keep questions concise for optimal model processing.</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm text-slate-700"><strong>CPU-only inference:</strong> Response generation runs on local CPU and may take 2–6 seconds.</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm text-slate-700"><strong>No internet access:</strong> The model's knowledge is static and cut off at its training date.</span>
+              </li>
+              <li class="flex items-start">
+                <svg class="h-5 w-5 text-amber-500 mr-2 mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+                <span class="text-sm text-slate-700"><strong>Domain scope:</strong> Best suited for factual, core science questions rather than advanced research topics.</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column -->
+      <div class="space-y-8">
+        
+        <!-- PROJECT OBJECTIVES -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+            <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Project Objectives</h2>
+          </div>
+          <div class="p-6">
+            <ol class="space-y-4">
+              <li class="flex items-start">
+                <span class="flex-shrink-0 h-6 w-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold border border-slate-200 mr-3 mt-0.5">1</span>
+                <span class="text-sm text-slate-700">Support independent learning in science subjects through interactive Q&A.</span>
+              </li>
+              <li class="flex items-start">
+                <span class="flex-shrink-0 h-6 w-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold border border-slate-200 mr-3 mt-0.5">2</span>
+                <span class="text-sm text-slate-700">Provide instant AI-generated answers to common science questions.</span>
+              </li>
+              <li class="flex items-start">
+                <span class="flex-shrink-0 h-6 w-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold border border-slate-200 mr-3 mt-0.5">3</span>
+                <span class="text-sm text-slate-700">Classify incoming questions by subject area automatically for better analytics.</span>
+              </li>
+              <li class="flex items-start">
+                <span class="flex-shrink-0 h-6 w-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold border border-slate-200 mr-3 mt-0.5">4</span>
+                <span class="text-sm text-slate-700">Enable educators to monitor student question patterns and identify knowledge gaps.</span>
+              </li>
+              <li class="flex items-start">
+                <span class="flex-shrink-0 h-6 w-6 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-xs font-bold border border-slate-200 mr-3 mt-0.5">5</span>
+                <span class="text-sm text-slate-700">Evaluate localized NLP model performance in a constrained educational context.</span>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <!-- MODEL & DATASET INFORMATION -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
+            <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Model & Dataset Information</h2>
+          </div>
+          <div class="p-6">
+            
+            <!-- Model Card -->
+            <div class="mb-8">
+              <h3 class="text-sm font-semibold text-slate-900 mb-3 border-b border-slate-100 pb-2">Model Used</h3>
+              <div class="flex items-start border border-slate-200 rounded-lg p-4 bg-slate-50/50">
+                <div class="bg-white p-2 rounded shadow-sm border border-slate-200 mr-4 flex-shrink-0 flex items-center justify-center w-12 h-12">
+                  <span class="text-slate-600 font-black text-xl">T5</span>
+                </div>
+                <div>
+                  <h4 class="text-base font-bold text-slate-900">Flan-T5 Base (Quantized)</h4>
+                  <p class="text-xs text-slate-500 mt-1">Text-to-Text Transfer Transformer</p>
+                  <div class="mt-2 text-xs text-slate-600 grid grid-cols-2 gap-y-1">
+                    <span><strong>Provider:</strong> Xenova / HF</span>
+                    <span><strong>Parameters:</strong> ~250M</span>
+                    <span><strong>Max Input:</strong> 42 tokens</span>
+                    <span><strong>Max Output:</strong> 325 tokens</span>
+                  </div>
+                  <div class="mt-2 text-xs text-emerald-600 flex items-center bg-emerald-50 inline-block px-2 py-1 rounded">
+                    <svg class="h-3 w-3 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+                    </svg>
+                    Privacy: Questions are not used to train the model.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Training Datasets -->
+            <div>
+              <h3 class="text-sm font-semibold text-slate-900 mb-3 border-b border-slate-100 pb-2">Training Datasets Reference</h3>
+              
+              <div class="space-y-3">
+                <div class="border border-slate-200 rounded-lg p-3 bg-white flex justify-between items-center hover:border-slate-300 transition-colors">
+                  <div>
+                    <h4 class="text-sm font-semibold text-slate-800">SciQ</h4>
+                    <p class="text-xs text-slate-500 mt-0.5">13,679 science questions — Allen AI</p>
+                  </div>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200 uppercase">
+                    Science
+                  </span>
+                </div>
+                
+                <div class="border border-slate-200 rounded-lg p-3 bg-white flex justify-between items-center hover:border-slate-300 transition-colors">
+                  <div>
+                    <h4 class="text-sm font-semibold text-slate-800">ScienceQA</h4>
+                    <p class="text-xs text-slate-500 mt-0.5">21,208 multimodal questions — Hugging Face</p>
+                  </div>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-slate-100 text-slate-600 border border-slate-200 uppercase">
+                    Science Ed
+                  </span>
+                </div>
+              </div>
+              
+            </div>
+            
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+// This is a static informational view, no reactive state or API calls required.
+</script>
