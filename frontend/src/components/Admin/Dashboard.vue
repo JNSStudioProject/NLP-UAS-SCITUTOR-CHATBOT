@@ -19,11 +19,6 @@
         <router-link to="/admin/model" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
           Model Information
         </router-link>
-        <div class="pt-4 mt-4 border-t border-slate-200">
-          <a href="#" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
-            Settings
-          </a>
-        </div>
       </nav>
     </aside>
 
@@ -32,14 +27,9 @@
       <!-- Top Bar -->
       <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0">
         <h1 class="text-lg font-bold text-slate-700">Science QA Admin Dashboard</h1>
-        <div class="flex items-center space-x-4">
-          <button class="flex items-center px-3 py-1.5 border border-amber-200 bg-amber-50 text-amber-700 rounded-md text-sm font-medium hover:bg-amber-100 transition-colors">
-            <span class="mr-2">🔔</span> Notif
-          </button>
-          <button class="flex items-center px-3 py-1.5 border border-slate-300 bg-white text-slate-700 rounded-md text-sm font-medium hover:bg-slate-50 transition-colors">
-            Admin User <span class="ml-2 text-xs">▼</span>
-          </button>
-        </div>
+        <button class="flex items-center px-4 py-2 border border-red-200 bg-red-50 text-red-600 rounded-md text-sm font-medium hover:bg-red-100 transition-colors" @click="logout">
+          Logout
+        </button>
       </header>
 
       <!-- Scrollable Dashboard Content -->
@@ -185,6 +175,11 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
+const logout = () => {
+  localStorage.removeItem('admin_token')
+  router.push('/admin/login')
+}
 
 const metrics = ref(null)
 const recentQuestions = ref([])

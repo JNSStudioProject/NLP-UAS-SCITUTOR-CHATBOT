@@ -1,184 +1,230 @@
 <template>
-  <div class="dataset-management-container">
-    <!-- Page Header -->
-    <header class="page-header">
-      <div>
-        <h1 class="text-2xl font-bold text-gray-800">Dataset Management</h1>
-        <p class="text-gray-500">Manage and explore all 18,784 records</p>
+  <div class="flex h-screen bg-slate-50 overflow-hidden font-sans">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-slate-50 border-r border-slate-200 flex flex-col flex-shrink-0">
+      <div class="h-16 flex items-center px-6 border-b border-slate-200">
+        <span class="text-2xl mr-2">⚙️</span>
+        <span class="font-bold text-slate-800 text-lg">Admin Panel</span>
       </div>
-      <div class="header-actions">
-        <button class="btn btn-outline" @click="fetchData(currentPage)">
-          <span class="icon">↻</span> Refresh
+      <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <router-link to="/admin/dashboard" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
+          Dashboard
+        </router-link>
+        <router-link to="/admin/dataset" class="flex items-center px-4 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium transition-colors">
+          Dataset Management
+        </router-link>
+        <router-link to="/admin/monitoring" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
+          Question Monitoring
+        </router-link>
+        <router-link to="/admin/model" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
+          Model Information
+        </router-link>
+      </nav>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <!-- Top Bar -->
+      <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0">
+        <h1 class="text-lg font-bold text-slate-700">Science QA Admin Dashboard</h1>
+        <button class="flex items-center px-4 py-2 border border-red-200 bg-red-50 text-red-600 rounded-md text-sm font-medium hover:bg-red-100 transition-colors" @click="logout">
+          Logout
         </button>
-        <button class="btn btn-primary">
-          <span class="icon">+</span> Upload Dataset
-        </button>
-      </div>
-    </header>
+      </header>
 
-    <!-- Dataset Summary Cards -->
-    <section class="summary-cards">
-      <div class="summary-card">
-        <div class="card-icon">📚</div>
-        <div class="card-content">
-          <h3>18,784</h3>
-          <p>Total Records</p>
-          <span class="subtext">Across all datasets</span>
-        </div>
-      </div>
-      <div class="summary-card">
-        <div class="card-icon">🗂️</div>
-        <div class="card-content">
-          <h3>2</h3>
-          <p>Active Datasets</p>
-          <span class="subtext">SciQ + ScienceQA</span>
-        </div>
-      </div>
-      <div class="summary-card">
-        <div class="card-icon">🕒</div>
-        <div class="card-content">
-          <h3>Dec 1</h3>
-          <p>Last Updated</p>
-          <span class="subtext">System sync</span>
-        </div>
-      </div>
-    </section>
+      <!-- Scrollable Content -->
+      <main class="flex-1 overflow-y-auto">
+        <div class="dataset-management-container">
+          <!-- Page Header -->
+          <header class="page-header">
+            <div>
+              <h1 class="text-2xl font-bold text-gray-800">Dataset Management</h1>
+              <p class="text-gray-500">Manage and explore all 18,784 records</p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-outline" @click="fetchData(currentPage)">
+                <span class="icon">↻</span> Refresh
+              </button>
+              <button class="btn btn-primary">
+                <span class="icon">+</span> Upload Dataset
+              </button>
+            </div>
+          </header>
 
-    <!-- Dataset Table Section -->
-    <section class="table-section">
-      <div class="section-header">
-        <h2 class="section-title">DATASET RECORDS</h2>
-      </div>
+          <!-- Dataset Summary Cards -->
+          <section class="summary-cards">
+            <div class="summary-card">
+              <div class="card-icon">📚</div>
+              <div class="card-content">
+                <h3>18,784</h3>
+                <p>Total Records</p>
+                <span class="subtext">Across all datasets</span>
+              </div>
+            </div>
+            <div class="summary-card">
+              <div class="card-icon">🗂️</div>
+              <div class="card-content">
+                <h3>2</h3>
+                <p>Active Datasets</p>
+                <span class="subtext">SciQ + ScienceQA</span>
+              </div>
+            </div>
+            <div class="summary-card">
+              <div class="card-icon">🕒</div>
+              <div class="card-content">
+                <h3>Dec 1</h3>
+                <p>Last Updated</p>
+                <span class="subtext">System sync</span>
+              </div>
+            </div>
+          </section>
 
-      <div class="table-container">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th class="w-16">#</th>
-              <th>ID</th>
-              <th>User Email</th>
-              <th>Role</th>
-              <th>Subject</th>
-              <th>Question Preview</th>
-              <th>Date</th>
-              <th class="text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="loading">
-              <td colspan="8" class="text-center py-8 text-gray-500">
-                <div class="spinner inline-block"></div>
-                <p class="mt-2">Loading dataset records...</p>
-              </td>
-            </tr>
-            <tr v-else-if="error">
-              <td colspan="8" class="text-center py-8 text-red-500">
-                {{ error }}
-              </td>
-            </tr>
-            <tr v-else-if="records.length === 0">
-              <td colspan="8" class="text-center py-8 text-gray-500">
-                No records found.
-              </td>
-            </tr>
-            <tr v-for="(record, index) in records" :key="record.id || index" v-else>
-              <td>{{ (currentPage - 1) * limit + index + 1 }}</td>
-              <td class="font-mono text-xs text-gray-500 truncate-id">{{ record.id }}</td>
-              <td>{{ record.userEmail }}</td>
-              <td>
-                <span class="role-badge" :class="record.userRole?.toLowerCase()">
-                  {{ record.userRole }}
-                </span>
-              </td>
-              <td>
-                <span class="subject-badge">
-                  {{ record.subject }}
-                </span>
-              </td>
-              <td class="truncate-preview" :title="record.inputPreview || record.input">
-                {{ record.inputPreview || record.input }}
-              </td>
-              <td class="text-sm text-gray-500">{{ formatDate(record.createdAt) }}</td>
-              <td class="text-right actions-cell">
-                <button class="btn-action" @click="viewRecord(record)">View</button>
-                <button class="btn-action text-red-600" @click="deleteRecord(record.id)">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+          <!-- Dataset Table Section -->
+          <section class="table-section">
+            <div class="section-header">
+              <h2 class="section-title">DATASET RECORDS</h2>
+            </div>
 
-      <!-- Pagination Controls -->
-      <div class="pagination-footer">
-        <div class="pagination-info">
-          Showing {{ pageStartIndex }}–{{ pageEndIndex }} of {{ formatNumber(totalRecords) }} records
-        </div>
-        <div class="pagination-controls">
-          <button 
-            class="btn-page" 
-            :disabled="currentPage === 1"
-            @click="changePage(currentPage - 1)"
-          >
-            &larr; Prev
-          </button>
-          
-          <div class="page-numbers">
-            <button 
-              v-for="page in paginationWindow" 
-              :key="page"
-              class="btn-page-number"
-              :class="{ 'active': page === currentPage, 'dots': page === '...' }"
-              :disabled="page === '...'"
-              @click="page !== '...' && changePage(page)"
-            >
-              {{ page }}
-            </button>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th class="w-16">#</th>
+                    <th>ID</th>
+                    <th>User Email</th>
+                    <th>Role</th>
+                    <th>Subject</th>
+                    <th>Question Preview</th>
+                    <th>Date</th>
+                    <th class="text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="loading">
+                    <td colspan="8" class="text-center py-8 text-gray-500">
+                      <div class="spinner inline-block"></div>
+                      <p class="mt-2">Loading dataset records...</p>
+                    </td>
+                  </tr>
+                  <tr v-else-if="error">
+                    <td colspan="8" class="text-center py-8 text-red-500">
+                      {{ error }}
+                    </td>
+                  </tr>
+                  <tr v-else-if="records.length === 0">
+                    <td colspan="8" class="text-center py-8 text-gray-500">
+                      No records found.
+                    </td>
+                  </tr>
+                  <tr v-for="(record, index) in records" :key="record.id || index" v-else>
+                    <td>{{ (currentPage - 1) * limit + index + 1 }}</td>
+                    <td class="font-mono text-xs text-gray-500 truncate-id">{{ record.id }}</td>
+                    <td>{{ record.userEmail }}</td>
+                    <td>
+                      <span class="role-badge" :class="record.userRole?.toLowerCase()">
+                        {{ record.userRole }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="subject-badge">
+                        {{ record.subject }}
+                      </span>
+                    </td>
+                    <td class="truncate-preview" :title="record.inputPreview || record.input">
+                      {{ record.inputPreview || record.input }}
+                    </td>
+                    <td class="text-sm text-gray-500">{{ formatDate(record.createdAt) }}</td>
+                    <td class="text-right actions-cell">
+                      <button class="btn-action" @click="viewRecord(record)">View</button>
+                      <button class="btn-action text-red-600" @click="deleteRecord(record.id)">Delete</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Controls -->
+            <div class="pagination-footer">
+              <div class="pagination-info">
+                Showing {{ pageStartIndex }}–{{ pageEndIndex }} of {{ formatNumber(totalRecords) }} records
+              </div>
+              <div class="pagination-controls">
+                <button 
+                  class="btn-page" 
+                  :disabled="currentPage === 1"
+                  @click="changePage(currentPage - 1)"
+                >
+                  &larr; Prev
+                </button>
+                
+                <div class="page-numbers">
+                  <button 
+                    v-for="page in paginationWindow" 
+                    :key="page"
+                    class="btn-page-number"
+                    :class="{ 'active': page === currentPage, 'dots': page === '...' }"
+                    :disabled="page === '...'"
+                    @click="page !== '...' && changePage(page)"
+                  >
+                    {{ page }}
+                  </button>
+                </div>
+
+                <button 
+                  class="btn-page" 
+                  :disabled="currentPage === totalPages"
+                  @click="changePage(currentPage + 1)"
+                >
+                  Next &rarr;
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Expanded Record Detail -->
+          <div v-if="selectedRecord" class="detail-panel">
+            <div class="panel-overlay" @click="selectedRecord = null"></div>
+            <div class="panel-content shadow-lg">
+              <div class="panel-header-inner flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold">Record Details</h3>
+                <button class="text-gray-500 hover:text-gray-800" @click="selectedRecord = null">✕</button>
+              </div>
+              <div class="record-detail-grid">
+                <div class="detail-row">
+                  <span class="detail-label">Record ID</span>
+                  <span class="detail-value font-mono">{{ selectedRecord.id }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Subject</span>
+                  <span class="detail-value">{{ selectedRecord.subject }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">User Email</span>
+                  <span class="detail-value">{{ selectedRecord.userEmail }}</span>
+                </div>
+                <div class="detail-row mt-4 flex-col items-start">
+                  <span class="detail-label mb-2">Question Input</span>
+                  <div class="code-block w-full">{{ selectedRecord.input || selectedRecord.inputPreview }}</div>
+                </div>
+              </div>
+            </div>
           </div>
-
-          <button 
-            class="btn-page" 
-            :disabled="currentPage === totalPages"
-            @click="changePage(currentPage + 1)"
-          >
-            Next &rarr;
-          </button>
         </div>
-      </div>
-    </section>
-
-    <!-- Expanded Record Detail -->
-    <div v-if="selectedRecord" class="detail-panel">
-      <div class="panel-overlay" @click="selectedRecord = null"></div>
-      <div class="panel-content shadow-lg">
-        <div class="panel-header-inner flex justify-between items-center mb-4">
-          <h3 class="text-lg font-bold">Record Details</h3>
-          <button class="text-gray-500 hover:text-gray-800" @click="selectedRecord = null">✕</button>
-        </div>
-        <div class="record-detail-grid">
-          <div class="detail-row">
-            <span class="detail-label">Record ID</span>
-            <span class="detail-value font-mono">{{ selectedRecord.id }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Subject</span>
-            <span class="detail-value">{{ selectedRecord.subject }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">User Email</span>
-            <span class="detail-value">{{ selectedRecord.userEmail }}</span>
-          </div>
-          <div class="detail-row mt-4 flex-col items-start">
-            <span class="detail-label mb-2">Question Input</span>
-            <div class="code-block w-full">{{ selectedRecord.input || selectedRecord.inputPreview }}</div>
-          </div>
-        </div>
-      </div>
+      </main>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const logout = () => {
+  localStorage.removeItem('admin_token')
+  router.push('/admin/login')
+}
 
 const records = ref([])
 const totalRecords = ref(18784)
@@ -290,7 +336,7 @@ onMounted(() => {
   gap: 1.5rem;
   padding: 1.5rem;
   background-color: #f1f5f9;
-  min-height: calc(100vh - 64px);
+  min-height: 100%;
 }
 
 .page-header {
