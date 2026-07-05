@@ -3,7 +3,12 @@ import { useAuthStore } from '@/stores/auth'
 
 const routes = [
   { path: '/', name: 'Home', component: () => import('../components/User/Home.vue') },
-  { path: '/ask', name: 'AskQuestion', component: () => import('../components/User/AskQuestion.vue') },
+  { 
+    path: '/ask', 
+    name: 'AskQuestion', 
+    component: () => import('../components/User/AskQuestion.vue'),
+    meta: { requiresAuth: true }
+  },
   { path: '/about', name: 'About', component: () => import('../components/User/About.vue') },
   {
     path: '/history',
@@ -51,14 +56,14 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     // If the route is an admin route, redirect to admin login
     if (to.path.startsWith('/admin')) {
-      return next({ name: 'AdminLogin', query: { redirect: to.fullPath } })
+      return next({ name: 'AdminLogin', query: { redirect: to.fullPath }, replace: true })
     }
     // Otherwise standard login
-    return next({ name: 'AuthScreen', query: { redirect: to.fullPath } })
+    return next({ name: 'AuthScreen', query: { redirect: to.fullPath }, replace: true })
   }
 
   if (to.meta.requiresAdmin && !authStore.isAdmin) {
-    return next({ name: 'Home' }) // Redirect unauthorized access to home
+    return next({ name: 'Home', replace: true }) // Redirect unauthorized access to home
   }
 
   next()

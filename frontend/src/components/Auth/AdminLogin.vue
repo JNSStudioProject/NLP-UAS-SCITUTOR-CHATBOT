@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-container">
+  <div class="auth-container relative">
     <div class="auth-card">
       <div class="auth-header">
         <div class="admin-badge">
@@ -69,8 +69,8 @@
       </form>
 
       <div class="admin-link-wrapper">
-        <button class="admin-link" @click="emit('back-to-user')">
-          ← Return to Student Portal
+        <button type="button" class="admin-link" @click="router.push('/')">
+          ← Back to Home
         </button>
       </div>
     </div>
@@ -218,6 +218,7 @@ const handleAdminLogin = async () => {
   color: #f8fafc;
   overflow: hidden;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .auth-header {

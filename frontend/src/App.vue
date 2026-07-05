@@ -28,9 +28,6 @@
              <router-link v-if="!authStore.isAuthenticated" :to="{ name: 'AuthScreen' }" class="text-sm font-medium text-slate-600 hover:text-slate-900">
                Login
              </router-link>
-             <button v-if="authStore.isAuthenticated" @click="handleLogout" class="text-sm font-medium text-slate-600 hover:text-slate-900 cursor-pointer">
-               Logout
-             </button>
              <span class="text-gray-300">|</span>
              <router-link :to="{ name: 'AdminLogin' }" class="text-xs text-gray-400 hover:text-gray-600">Admin Portal</router-link>
           </div>

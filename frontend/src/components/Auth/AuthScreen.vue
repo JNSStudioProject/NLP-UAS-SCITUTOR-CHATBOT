@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-container">
+  <div class="auth-container relative">
     <div class="auth-card">
       <div class="auth-header">
         <h2>{{ activeTab === 'signin' ? 'Welcome Back' : 'Create Account' }}</h2>
@@ -102,7 +102,7 @@
       </form>
 
       <div class="admin-link-wrapper">
-        <button class="admin-link" @click="emit('open-admin-login')">
+        <button type="button" class="admin-link" @click="router.push('/admin/login')">
           Access Admin Portal
         </button>
       </div>
@@ -251,6 +251,7 @@ const handleSubmit = async () => {
   color: #f8fafc;
   overflow: hidden;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .auth-header {
