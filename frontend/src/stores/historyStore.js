@@ -1,12 +1,27 @@
 import { defineStore } from 'pinia'
-import api from '@/utils/api'
+import { useAuthStore } from './auth'
+
+// LocalStorage key
+const STORAGE_KEY = 'scitutor_history'
 
 export const useHistoryStore = defineStore('history', {
-  state: () => ({
-    questions: [],
-    loading: false,
-    error: null,
-  }),
+  state: () => {
+    let saved = []
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY)
+      if (stored) {
+        saved = JSON.parse(stored)
+      }
+    } catch (e) {
+      console.error('Error reading history from localStorage', e)
+    }
+    
+    return {
+      questions: saved,
+      loading: false,
+      error: null,
+    }
+  },
   
   getters: {
     historyCount: (state) => state.questions.length,
@@ -14,13 +29,16 @@ export const useHistoryStore = defineStore('history', {
   
   actions: {
     async fetchHistory() {
+      // In localStorage mode, state is already initialized on load.
+      // We can just trigger a reactivity update if needed.
       this.loading = true
-      this.error = null
       try {
-        const response = await api.get('/history')
-        this.questions = response.data.history || []
+        const stored = localStorage.getItem(STORAGE_KEY)
+        if (stored) {
+          this.questions = JSON.parse(stored)
+        }
       } catch (err) {
-        this.error = err.response?.data?.error?.message || 'Failed to fetch history'
+        this.error = 'Failed to parse history'
       } finally {
         this.loading = false
       }
@@ -28,11 +46,17 @@ export const useHistoryStore = defineStore('history', {
     
     async saveQuestion(questionData) {
       try {
-        const response = await api.post('/history', questionData)
-        if (response.data) {
-          this.questions.unshift(response.data)
+        const authStore = useAuthStore();
+        const newEntry = {
+          id: Date.now().toString() + Math.random().toString(36).substring(7),
+          ...questionData,
+          userEmail: authStore.user?.email || 'Guest',
+          user: authStore.user?.user_metadata?.full_name || 'Anonymous User',
+          createdAt: new Date().toISOString()
         }
-        return response.data
+        this.questions.unshift(newEntry)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.questions))
+        return newEntry
       } catch (err) {
         console.error('Failed to save question to history', err)
         throw err
@@ -41,10 +65,10 @@ export const useHistoryStore = defineStore('history', {
 
     async clearHistory() {
       try {
-        await api.delete('/history')
+        localStorage.removeItem(STORAGE_KEY)
         this.questions = []
       } catch (err) {
-        this.error = err.response?.data?.error?.message || 'Failed to clear history'
+        this.error = 'Failed to clear history'
         throw err
       }
     }

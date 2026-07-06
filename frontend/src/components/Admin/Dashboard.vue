@@ -3,7 +3,10 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-slate-50 border-r border-slate-200 flex flex-col flex-shrink-0">
       <div class="h-16 flex items-center px-6 border-b border-slate-200">
-        <span class="text-2xl mr-2">⚙️</span>
+        <svg class="w-6 h-6 mr-3 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
         <span class="font-bold text-slate-800 text-lg">Admin Panel</span>
       </div>
       <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
@@ -43,26 +46,32 @@
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <!-- Card 1 -->
           <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-4 border border-blue-100">
-              ❓
+            <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-4 border border-purple-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
-            <h3 class="text-3xl font-bold text-slate-900">{{ formatNumber(metrics?.questionMetrics?.totalQuestions || 8932) }}</h3>
+            <h3 class="text-3xl font-bold text-slate-900">{{ formatNumber(historyStore.historyCount) }}</h3>
             <p class="text-sm font-semibold text-slate-700 mt-2">Total Questions Asked</p>
-            <p class="text-xs text-slate-500 mt-1">All users, all time</p>
+            <p class="text-xs text-slate-500 mt-1">From your local session</p>
           </div>
           <!-- Card 2 -->
           <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
             <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-4 border border-purple-100">
-              👥
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
             </div>
-            <h3 class="text-3xl font-bold text-slate-900">{{ formatNumber(metrics?.userMetrics?.activeToday || 1248) }}</h3>
+            <h3 class="text-3xl font-bold text-slate-900">1</h3>
             <p class="text-sm font-semibold text-slate-700 mt-2">Total Active Users</p>
-            <p class="text-xs text-slate-500 mt-1">Registered students</p>
+            <p class="text-xs text-slate-500 mt-1">Current local user</p>
           </div>
           <!-- Card 3 -->
           <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl mb-4 border border-emerald-100">
-              📚
+            <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-4 border border-purple-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+              </svg>
             </div>
             <h3 class="text-3xl font-bold text-slate-900">48,631</h3>
             <p class="text-sm font-semibold text-slate-700 mt-2">Total Dataset Records</p>
@@ -70,12 +79,14 @@
           </div>
           <!-- Card 4 -->
           <div class="bg-white rounded-xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center text-xl mb-4 border border-orange-100">
-              🧠
+            <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-4 border border-purple-100">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
             </div>
-            <h3 class="text-3xl font-bold text-slate-900">8,891</h3>
+            <h3 class="text-3xl font-bold text-slate-900">{{ formatNumber(historyStore.historyCount) }}</h3>
             <p class="text-sm font-semibold text-slate-700 mt-2">Total Answers Generated</p>
-            <p class="text-xs text-slate-500 mt-1">By T5 model</p>
+            <p class="text-xs text-slate-500 mt-1">From your local session</p>
           </div>
         </section>
 
@@ -173,8 +184,10 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const router = useRouter()
+const historyStore = useHistoryStore()
 
 const logout = () => {
   localStorage.removeItem('admin_token')
@@ -189,22 +202,8 @@ let pollingInterval = null
 
 const fetchDashboardData = async () => {
   try {
-    const token = localStorage.getItem('admin_token') || ''
-    const headers = {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
-
-    const metricsRes = await fetch('/api/admin/metrics', { headers })
-    if (metricsRes.ok) {
-      metrics.value = await metricsRes.json()
-    }
-
-    const questionsRes = await fetch('/api/admin/questions?limit=5&sort=createdAt_desc', { headers })
-    if (questionsRes.ok) {
-      const qData = await questionsRes.json()
-      recentQuestions.value = qData.data || qData
-    }
+    await historyStore.fetchHistory()
+    recentQuestions.value = historyStore.questions.slice(0, 5)
   } catch (err) {
     console.error('Error fetching dashboard data:', err)
     error.value = 'Failed to load dashboard metrics.'
@@ -215,7 +214,7 @@ const fetchDashboardData = async () => {
 
 onMounted(() => {
   fetchDashboardData()
-  pollingInterval = setInterval(fetchDashboardData, 30000)
+  pollingInterval = setInterval(fetchDashboardData, 5000)
 })
 
 onUnmounted(() => {
@@ -265,7 +264,7 @@ const navigateToQuestions = () => {
 }
 
 const navigateToModelInfo = () => {
-  router.push('/admin/model-info')
+  router.push('/admin/model')
 }
 </script>
 

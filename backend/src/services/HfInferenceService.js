@@ -23,7 +23,8 @@ class HfInferenceService {
     const start = Date.now();
     
     try {
-      const url = `https://api-inference.huggingface.co/models/${MODEL_ID}`;
+      // Menggunakan URL dari Server Mini HF Space yang baru dibuat
+      const url = `https://jessica2121-nlp-uas-final-science.hf.space/models/${MODEL_ID}`;
       
       const defaultOptions = { max_new_tokens: 325, temperature: 1.0 };
       const options = { ...defaultOptions, ...inferOptions };
@@ -40,7 +41,9 @@ class HfInferenceService {
         method: 'POST',
         headers,
         body: JSON.stringify({
-          inputs: sanitizedPrompt,
+          inputs: sanitizedPrompt.toLowerCase().startsWith('question:') 
+            ? sanitizedPrompt 
+            : `question: ${sanitizedPrompt}`,
           parameters: options
         })
       });

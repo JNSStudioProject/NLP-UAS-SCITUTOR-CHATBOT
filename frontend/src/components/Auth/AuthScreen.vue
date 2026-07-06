@@ -226,8 +226,6 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 .auth-container {
   display: flex;
   align-items: center;
@@ -235,7 +233,6 @@ const handleSubmit = async () => {
   min-height: 100vh;
   width: 100%;
   background-color: #ffffff; /* White background */
-  font-family: 'Inter', sans-serif;
   padding: 1rem;
   box-sizing: border-box;
 }
@@ -342,8 +339,8 @@ const handleSubmit = async () => {
 
 .form-group input:focus {
   outline: none;
-  border-color: #f97316; /* Orange 500 */
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2);
+  border-color: #9333ea; /* Purple 600 */
+  box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2);
 }
 
 .form-group input::placeholder {
@@ -377,7 +374,7 @@ const handleSubmit = async () => {
 
 .submit-button {
   width: 100%;
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); /* Orange 500 to 600 */
+  background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%);
   color: white;
   border: none;
   border-radius: 10px;
@@ -392,13 +389,13 @@ const handleSubmit = async () => {
   align-items: center;
   min-height: 52px;
   font-family: inherit;
-  box-shadow: 0 4px 14px 0 rgba(234, 88, 12, 0.39);
+  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
 }
 
 .submit-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.5);
-  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  box-shadow: 0 6px 16px rgba(147, 51, 234, 0.4);
+  background: linear-gradient(135deg, #7e22ce 0%, #6b21a8 100%);
 }
 
 .submit-button:disabled {
@@ -434,7 +431,7 @@ const handleSubmit = async () => {
 }
 
 .admin-link:hover {
-  color: #94a3b8;
+  color: #d8b4fe; /* Purple 300 */
   text-decoration: underline;
 }
 

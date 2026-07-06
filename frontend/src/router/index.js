@@ -16,6 +16,24 @@ const routes = [
     component: () => import('../components/User/QuestionHistory.vue'),
     meta: { requiresAuth: true }
   },
+  {
+    path: '/quiz',
+    name: 'Quiz',
+    component: () => import('../components/User/Quiz.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/global-quiz',
+    name: 'GlobalQuiz',
+    component: () => import('../components/User/GlobalQuiz.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/flashcards',
+    name: 'Flashcards',
+    component: () => import('../components/User/Flashcards.vue'),
+    meta: { requiresAuth: true }
+  },
   { path: '/login', name: 'AuthScreen', component: () => import('../components/Auth/AuthScreen.vue') },
   { path: '/admin/login', name: 'AdminLogin', component: () => import('../components/Auth/AdminLogin.vue') },
   {

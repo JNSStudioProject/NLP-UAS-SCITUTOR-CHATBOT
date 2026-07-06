@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+transformers==5.12.1
+torch
+pydantic
+protobuf
+sentencepiece

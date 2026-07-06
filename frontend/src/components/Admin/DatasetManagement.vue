@@ -3,7 +3,10 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-slate-50 border-r border-slate-200 flex flex-col flex-shrink-0">
       <div class="h-16 flex items-center px-6 border-b border-slate-200">
-        <span class="text-2xl mr-2">⚙️</span>
+        <svg class="w-6 h-6 mr-3 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
         <span class="font-bold text-slate-800 text-lg">Admin Panel</span>
       </div>
       <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
@@ -43,7 +46,11 @@
             </div>
             <div class="header-actions">
               <button class="btn btn-outline" @click="fetchData(currentPage)">
-                <span class="icon">↻</span> Refresh
+                <span class="icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                </span> Refresh
               </button>
               <button class="btn btn-primary">
                 <span class="icon">+</span> Upload Dataset
@@ -54,7 +61,11 @@
           <!-- Dataset Summary Cards -->
           <section class="summary-cards">
             <div class="summary-card">
-              <div class="card-icon">📚</div>
+              <div class="card-icon text-purple-600 bg-purple-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                </svg>
+              </div>
               <div class="card-content">
                 <h3>18,784</h3>
                 <p>Total Records</p>
@@ -62,7 +73,11 @@
               </div>
             </div>
             <div class="summary-card">
-              <div class="card-icon">🗂️</div>
+              <div class="card-icon text-purple-600 bg-purple-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
+                </svg>
+              </div>
               <div class="card-content">
                 <h3>2</h3>
                 <p>Active Datasets</p>
@@ -70,7 +85,11 @@
               </div>
             </div>
             <div class="summary-card">
-              <div class="card-icon">🕒</div>
+              <div class="card-icon text-purple-600 bg-purple-50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
               <div class="card-content">
                 <h3>Dec 1</h3>
                 <p>Last Updated</p>
@@ -187,7 +206,11 @@
             <div class="panel-content shadow-lg">
               <div class="panel-header-inner flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold">Record Details</h3>
-                <button class="text-gray-500 hover:text-gray-800" @click="selectedRecord = null">✕</button>
+                <button class="text-gray-500 hover:text-gray-800" @click="selectedRecord = null">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
               <div class="record-detail-grid">
                 <div class="detail-row">

@@ -3,7 +3,10 @@
     <!-- Sidebar -->
     <aside class="w-64 bg-slate-50 border-r border-slate-200 flex flex-col flex-shrink-0">
       <div class="h-16 flex items-center px-6 border-b border-slate-200">
-        <span class="text-2xl mr-2">⚙️</span>
+        <svg class="w-6 h-6 mr-3 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
         <span class="font-bold text-slate-800 text-lg">Admin Panel</span>
       </div>
       <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
@@ -169,8 +172,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useHistoryStore } from '@/stores/historyStore'
 
 const router = useRouter()
+const historyStore = useHistoryStore()
 
 const logout = () => {
   localStorage.removeItem('admin_token')
@@ -188,20 +193,10 @@ const selectedSubject = ref('All')
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 
-// Methods
 const fetchQuestions = async () => {
   try {
-    const response = await fetch('/api/admin/questions?limit=1000&sort=createdAt_desc', {
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('admin_token') || ''}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    
-    if (response.ok) {
-      const data = await response.json()
-      questions.value = data.data || data
-    }
+    await historyStore.fetchHistory()
+    questions.value = historyStore.questions
   } catch (error) {
     console.error('Failed to fetch questions:', error)
   } finally {

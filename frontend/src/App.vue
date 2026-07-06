@@ -19,6 +19,12 @@
               <router-link :to="{ name: 'QuestionHistory' }" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-slate-300 text-sm font-medium text-gray-500 hover:text-gray-700" active-class="border-slate-800 text-slate-900">
                 History
               </router-link>
+              <router-link :to="{ name: 'Flashcards' }" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-slate-300 text-sm font-medium text-gray-500 hover:text-gray-700" active-class="border-slate-800 text-slate-900">
+                Flashcards
+              </router-link>
+              <router-link :to="{ name: 'GlobalQuiz' }" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-slate-300 text-sm font-medium text-gray-500 hover:text-gray-700" active-class="border-slate-800 text-slate-900">
+                Global Quiz
+              </router-link>
               <router-link :to="{ name: 'About' }" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-slate-300 text-sm font-medium text-gray-500 hover:text-gray-700" active-class="border-slate-800 text-slate-900">
                 About
               </router-link>
@@ -28,6 +34,9 @@
              <router-link v-if="!authStore.isAuthenticated" :to="{ name: 'AuthScreen' }" class="text-sm font-medium text-slate-600 hover:text-slate-900">
                Login
              </router-link>
+             <button v-else @click="handleLogout" class="text-sm font-medium text-red-500 hover:text-red-700">
+               Logout
+             </button>
              <span class="text-gray-300">|</span>
              <router-link :to="{ name: 'AdminLogin' }" class="text-xs text-gray-400 hover:text-gray-600">Admin Portal</router-link>
           </div>

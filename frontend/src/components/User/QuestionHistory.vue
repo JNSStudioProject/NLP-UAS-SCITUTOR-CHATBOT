@@ -130,6 +130,14 @@
             <!-- Buttons stacked -->
             <div class="flex flex-col gap-2 w-full sm:w-auto">
               <button 
+                @click="saveToFlashcard(q)"
+                :disabled="flashcardStore.hasCardByInput(q.input)"
+                class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-1.5 border border-amber-300 rounded text-sm font-medium bg-amber-50 text-amber-700 hover:bg-amber-100 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <span v-if="flashcardStore.hasCardByInput(q.input)">⭐ Saved</span>
+                <span v-else>⭐ Flashcard</span>
+              </button>
+              <button 
                 @click="openModal(q)"
                 class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-1.5 border border-gray-300 rounded text-sm font-medium text-slate-700 bg-white hover:bg-gray-50 focus:outline-none"
               >
@@ -260,11 +268,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useHistoryStore } from '@/stores/historyStore'
+import { useFlashcardStore } from '@/stores/flashcardStore'
 
 const router = useRouter()
+const flashcardStore = useFlashcardStore()
 
 // --- Refs ---
 const questions = ref([])
@@ -331,49 +341,63 @@ const fetchHistory = async (page = 1) => {
   fetchError.value = null
   
   try {
-    // Simulated API call - replace with actual fetch or store action
-    // const result = await fetch(`/api/user/history?page=${page}&limit=10&subject=${subjectFilter.value}&search=${searchQuery.value}`)
-    // const data = await result.json()
+    const historyStore = useHistoryStore()
+    // Load from localStorage via store
+    await historyStore.fetchHistory()
     
-    // MOCK DATA GENERATION FOR DEMO
-    await new Promise(resolve => setTimeout(resolve, 800))
+    // Simulate slight delay for UX
+    await new Promise(resolve => setTimeout(resolve, 400))
     
-    const mockData = [
-      { id: '1', input: 'What is photosynthesis?', output: 'Photosynthesis is the process by which green plants use sunlight to synthesise nutrients from carbon dioxide and water...', subject: 'Biology', createdAt: '2024-11-30T09:15:00Z' },
-      { id: '2', input: "Explain Newton's Second Law.", output: "Newton's second law states that the acceleration of an object is directly related to the net force and inversely related to its mass (F=ma).", subject: 'Physics', createdAt: '2024-11-29T14:22:00Z' },
-      { id: '3', input: 'What is an atom?', output: 'An atom is the basic building block of all matter, consisting of a nucleus (protons and neutrons) surrounded by electrons.', subject: 'Chemistry', createdAt: '2024-11-29T11:05:00Z' },
-      { id: '4', input: 'How does osmosis work?', output: 'Osmosis is the spontaneous net movement of solvent molecules through a selectively permeable membrane into a region of higher solute concentration.', subject: 'Biology', createdAt: '2024-11-28T16:44:00Z' },
-      { id: '5', input: 'What is the speed of light?', output: 'The speed of light in a vacuum is exactly 299,792,458 metres per second (approximately 300,000 km/s).', subject: 'Physics', createdAt: '2024-11-27T10:30:00Z' },
-      { id: '6', input: 'What is the Pythagorean theorem?', output: 'In a right-angled triangle, the square of the hypotenuse is equal to the sum of the squares of the other two sides (a² + b² = c²).', subject: 'Mathematics', createdAt: '2024-11-26T08:55:00Z' },
-    ]
+    let filteredData = historyStore.questions || []
     
-    // Apply local filters for the mock
-    let filteredData = [...mockData]
+    // Apply local filters
     if (subjectFilter.value !== 'all') {
       filteredData = filteredData.filter(q => q.subject === subjectFilter.value)
     }
-    if (searchQuery.value.trim()) {
+    
+    if (searchQuery.value) {
       const q = searchQuery.value.toLowerCase()
-      filteredData = filteredData.filter(item => item.input.toLowerCase().includes(q))
+      filteredData = filteredData.filter(item => 
+        (item.input && item.input.toLowerCase().includes(q)) || 
+        (item.output && item.output.toLowerCase().includes(q)) ||
+        (item.subject && item.subject.toLowerCase().includes(q))
+      )
     }
     
-    questions.value = filteredData
-    totalCount.value = filteredData.length > 0 ? 48 : 0 // Mock total
+    totalCount.value = filteredData.length
     totalPages.value = Math.ceil(totalCount.value / 10) || 1
+    
+    // Handle bounds
+    if (page > totalPages.value) page = totalPages.value
+    if (page < 1) page = 1
+    
     currentPage.value = page
     
+    // Paginate
+    const startIdx = (page - 1) * 10
+    questions.value = filteredData.slice(startIdx, startIdx + 10)
+    
   } catch (err) {
-    fetchError.value = 'Failed to load question history. Please try again later.'
     console.error(err)
+    fetchError.value = 'Failed to load history data. Please try again.'
   } finally {
     isLoading.value = false
   }
 }
 
+// Watch for store changes if it updates externally
+watch(() => useHistoryStore().questions, () => {
+  fetchHistory(currentPage.value)
+}, { deep: true })
+
 const onPageChange = (page) => {
   if (page >= 1 && page <= totalPages.value) {
     fetchHistory(page)
   }
+}
+
+const saveToFlashcard = (q) => {
+  flashcardStore.addCard(q)
 }
 
 const setSubjectFilter = (id) => {

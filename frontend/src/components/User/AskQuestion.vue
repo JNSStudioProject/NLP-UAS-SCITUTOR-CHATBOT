@@ -136,6 +136,14 @@
             >
               Copy Answer
             </button>
+            <button
+              v-if="apiResponse"
+              type="button"
+              @click="generateQuiz"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors ml-auto"
+            >
+              🧠 Test Understanding
+            </button>
           </div>
         </div>
       </div>
@@ -186,12 +194,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
-import { useRoute } from 'vue-router'
-import { usePredictStore } from '@/stores/predictStore' // Adjust path if needed
+import { ref, computed, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { usePredictStore } from '@/stores/predictStore'
+import questionsData from '@/assets/questions.json'
 
 // --- Store and Router ---
 const route = useRoute()
+const router = useRouter()
 // Using optional chaining or try/catch in case store is not yet implemented
 let predictStore
 try {
@@ -217,14 +227,30 @@ const serverTokensUsed = ref(null)
 const submittedQuestion = ref('') // Stores the question that was actually submitted
 
 // --- Data for UI ---
-const exampleQuestions = [
-  'What is photosynthesis?',
-  "Explain Newton's Second Law.",
-  'What is an atom?',
-  'How does osmosis work?',
-  'What causes thunder?',
-  'What is mitosis?'
-]
+const exampleQuestions = ref([])
+
+const refreshExampleQuestions = () => {
+  let filtered = questionsData
+  if (selectedSubject.value) {
+    filtered = questionsData.filter(q => q.subject === selectedSubject.value)
+    if (filtered.length === 0) filtered = questionsData
+  }
+  
+  const shuffled = [...filtered].sort(() => 0.5 - Math.random())
+  exampleQuestions.value = shuffled.slice(0, 6).map(q => q.question)
+}
+
+onMounted(() => {
+  refreshExampleQuestions()
+  
+  if (predictStore && predictStore.lastResult) {
+    inputText.value = predictStore.lastInput || ''
+    apiResponse.value = predictStore.lastResult.output || ''
+    submittedQuestion.value = predictStore.lastInput || ''
+    serverTokensUsed.value = predictStore.lastResult.tokensUsed || null
+    latencyMs.value = predictStore.lastResult.latencyMs || null
+  }
+})
 
 const subjects = [
   { id: 'all', label: 'All' },
@@ -420,6 +446,7 @@ const copyAnswer = async () => {
 
 const setSubject = (subject) => {
   selectedSubject.value = subject.id === 'all' ? '' : subject.label
+  refreshExampleQuestions()
 }
 
 const isSelectedSubject = (subject) => {
@@ -428,17 +455,32 @@ const isSelectedSubject = (subject) => {
 }
 
 // --- 3H: Watchers ---
-watch(inputText, () => {
+watch(inputText, (newVal) => {
   // Reset apiResponse and apiError to null on new input (clear stale results)
-  if (apiResponse.value || apiError.value) {
-    apiResponse.value = null
-    apiError.value = null
+  // Only if the new input is actually different from what was just submitted/restored
+  if (newVal !== submittedQuestion.value) {
+    if (apiResponse.value || apiError.value) {
+      apiResponse.value = null
+      apiError.value = null
+    }
   }
 }, { immediate: false })
+
+// --- Quiz Logic ---
+const generateQuiz = () => {
+  router.push({
+    name: 'Quiz',
+    state: {
+      question: submittedQuestion.value,
+      answer: apiResponse.value
+    }
+  })
+}
 
 watch(() => route?.query?.subject, (newSubject) => {
   if (newSubject) {
     selectedSubject.value = newSubject.toString()
+    refreshExampleQuestions()
   }
 }, { immediate: true })
 
