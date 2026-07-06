@@ -31,14 +31,61 @@
             </div>
           </div>
           <div class="flex items-center space-x-4">
-             <router-link v-if="!authStore.isAuthenticated" :to="{ name: 'AuthScreen' }" class="text-sm font-medium text-slate-600 hover:text-slate-900">
+             <router-link v-if="!authStore.isAuthenticated" :to="{ name: 'AuthScreen' }" class="hidden sm:inline-block text-sm font-medium text-slate-600 hover:text-slate-900">
                Login
              </router-link>
-             <button v-else @click="handleLogout" class="text-sm font-medium text-red-500 hover:text-red-700">
+             <button v-else @click="handleLogout" class="hidden sm:inline-block text-sm font-medium text-red-500 hover:text-red-700">
                Logout
              </button>
-             <span class="text-gray-300">|</span>
-             <router-link :to="{ name: 'AdminLogin' }" class="text-xs text-gray-400 hover:text-gray-600">Admin Portal</router-link>
+             <span class="hidden sm:inline-block text-gray-300">|</span>
+             <router-link :to="{ name: 'AdminLogin' }" class="hidden sm:inline-block text-xs text-gray-400 hover:text-gray-600">Admin Portal</router-link>
+             
+             <!-- Mobile menu button -->
+             <div class="flex items-center sm:hidden">
+               <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-slate-500 rounded-md p-2">
+                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path v-if="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                   <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                 </svg>
+               </button>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div v-show="isMobileMenuOpen" class="sm:hidden border-t border-gray-200 bg-white">
+        <div class="pt-2 pb-3 space-y-1">
+          <router-link @click="isMobileMenuOpen = false" :to="{ name: 'Home' }" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-slate-50 hover:text-slate-900" active-class="bg-slate-50 text-slate-900 border-l-4 border-slate-800">
+            Home
+          </router-link>
+          <router-link @click="isMobileMenuOpen = false" :to="{ name: 'AskQuestion' }" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-slate-50 hover:text-slate-900" active-class="bg-slate-50 text-slate-900 border-l-4 border-slate-800">
+            Ask Question
+          </router-link>
+          <router-link @click="isMobileMenuOpen = false" :to="{ name: 'QuestionHistory' }" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-slate-50 hover:text-slate-900" active-class="bg-slate-50 text-slate-900 border-l-4 border-slate-800">
+            History
+          </router-link>
+          <router-link @click="isMobileMenuOpen = false" :to="{ name: 'Flashcards' }" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-slate-50 hover:text-slate-900" active-class="bg-slate-50 text-slate-900 border-l-4 border-slate-800">
+            Flashcards
+          </router-link>
+          <router-link @click="isMobileMenuOpen = false" :to="{ name: 'GlobalQuiz' }" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-slate-50 hover:text-slate-900" active-class="bg-slate-50 text-slate-900 border-l-4 border-slate-800">
+            Global Quiz
+          </router-link>
+          <router-link @click="isMobileMenuOpen = false" :to="{ name: 'About' }" class="block px-4 py-2 text-base font-medium text-gray-700 hover:bg-slate-50 hover:text-slate-900" active-class="bg-slate-50 text-slate-900 border-l-4 border-slate-800">
+            About
+          </router-link>
+        </div>
+        <div class="pt-4 pb-3 border-t border-gray-200">
+          <div class="px-4 space-y-1">
+             <router-link @click="isMobileMenuOpen = false" v-if="!authStore.isAuthenticated" :to="{ name: 'AuthScreen' }" class="block px-4 py-2 text-base font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900">
+               Login
+             </router-link>
+             <button v-else @click="() => { isMobileMenuOpen = false; handleLogout(); }" class="block w-full text-left px-4 py-2 text-base font-medium text-red-500 hover:bg-slate-50 hover:text-red-700">
+               Logout
+             </button>
+             <router-link @click="isMobileMenuOpen = false" :to="{ name: 'AdminLogin' }" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-slate-50 hover:text-gray-700">
+               Admin Portal
+             </router-link>
           </div>
         </div>
       </div>
@@ -52,13 +99,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+
+const isMobileMenuOpen = ref(false)
 
 // Check if current route is an admin route
 const isAdminRoute = computed(() => {

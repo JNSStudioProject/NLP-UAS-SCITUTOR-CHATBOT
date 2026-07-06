@@ -1,42 +1,61 @@
 <template>
   <div class="flex h-screen bg-slate-50 overflow-hidden font-sans">
+    <!-- Mobile overlay -->
+    <div v-if="isMobileMenuOpen" class="fixed inset-0 bg-slate-900 bg-opacity-50 z-30 lg:hidden" @click="isMobileMenuOpen = false"></div>
+
     <!-- Sidebar -->
-    <aside class="w-64 bg-slate-50 border-r border-slate-200 flex flex-col flex-shrink-0">
-      <div class="h-16 flex items-center px-6 border-b border-slate-200">
-        <svg class="w-6 h-6 mr-3 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-        <span class="font-bold text-slate-800 text-lg">Admin Panel</span>
+    <aside class="fixed inset-y-0 left-0 z-40 w-64 bg-slate-50 border-r border-slate-200 flex flex-col transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0"
+           :class="isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'">
+      <div class="h-16 flex items-center px-6 border-b border-slate-200 justify-between">
+        <div class="flex items-center">
+          <svg class="w-6 h-6 mr-3 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="font-bold text-slate-800 text-lg">Admin Panel</span>
+        </div>
+        <button @click="isMobileMenuOpen = false" class="lg:hidden text-slate-500 hover:text-slate-700 focus:outline-none">
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
       <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-        <router-link to="/admin/dashboard" class="flex items-center px-4 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium transition-colors">
+        <router-link @click="isMobileMenuOpen = false" to="/admin/dashboard" class="flex items-center px-4 py-3 bg-slate-900 text-white rounded-lg text-sm font-medium transition-colors">
           Dashboard
         </router-link>
-        <router-link to="/admin/dataset" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
+        <router-link @click="isMobileMenuOpen = false" to="/admin/dataset" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
           Dataset Management
         </router-link>
-        <router-link to="/admin/monitoring" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
+        <router-link @click="isMobileMenuOpen = false" to="/admin/monitoring" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
           Question Monitoring
         </router-link>
-        <router-link to="/admin/model" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
+        <router-link @click="isMobileMenuOpen = false" to="/admin/model" class="flex items-center px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-lg text-sm font-medium transition-colors">
           Model Information
         </router-link>
       </nav>
     </aside>
 
     <!-- Main Content Wrapper -->
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden w-full">
       <!-- Top Bar -->
-      <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 flex-shrink-0">
-        <h1 class="text-lg font-bold text-slate-700">Science QA Admin Dashboard</h1>
+      <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-8 flex-shrink-0">
+        <div class="flex items-center">
+          <button @click="isMobileMenuOpen = true" class="lg:hidden mr-4 text-slate-500 hover:text-slate-700 focus:outline-none">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 class="text-lg font-bold text-slate-700 hidden sm:block">Science QA Admin Dashboard</h1>
+          <h1 class="text-lg font-bold text-slate-700 sm:hidden">Admin</h1>
+        </div>
         <button class="flex items-center px-4 py-2 border border-red-200 bg-red-50 text-red-600 rounded-md text-sm font-medium hover:bg-red-100 transition-colors" @click="logout">
           Logout
         </button>
       </header>
 
       <!-- Scrollable Dashboard Content -->
-      <main class="flex-1 overflow-y-auto p-8">
+      <main class="flex-1 overflow-y-auto p-4 sm:p-8">
         <header class="mb-8">
           <h2 class="text-2xl font-bold text-slate-900">Dashboard Overview</h2>
           <p class="text-slate-500 mt-1">Real-time system summary</p>
@@ -188,6 +207,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 
 const router = useRouter()
 const historyStore = useHistoryStore()
+const isMobileMenuOpen = ref(false)
 
 const logout = () => {
   localStorage.removeItem('admin_token')

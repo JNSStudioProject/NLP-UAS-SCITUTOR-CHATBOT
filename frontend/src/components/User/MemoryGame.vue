@@ -54,11 +54,11 @@
         </div>
       </div>
 
-      <div class="flex gap-4">
-        <button @click="initGame" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-full shadow-md transition-colors text-lg">
+      <div class="flex flex-col sm:flex-row gap-4 mt-6">
+        <button @click="initGame" class="w-full sm:w-auto px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-full shadow-md transition-colors text-lg">
           Play Again
         </button>
-        <button @click="$emit('exit')" class="px-8 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-full shadow-sm border border-slate-200 transition-colors text-lg">
+        <button @click="$emit('exit')" class="w-full sm:w-auto px-8 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-full shadow-sm border border-slate-200 transition-colors text-lg">
           Back to Flashcards
         </button>
       </div>
@@ -77,11 +77,11 @@
       </div>
       <h2 class="text-4xl font-black text-rose-800 mb-4">Time's Up!</h2>
       <p class="text-lg text-rose-600 mb-8 font-medium">Your memory failed to synchronize in time.</p>
-      <div class="flex gap-4">
-        <button @click="initGame" class="px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-full shadow-md transition-colors text-lg">
+      <div class="flex flex-col sm:flex-row gap-4">
+        <button @click="initGame" class="w-full sm:w-auto px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold rounded-full shadow-md transition-colors text-lg">
           Try Again
         </button>
-        <button @click="$emit('exit')" class="px-8 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-full shadow-sm border border-slate-200 transition-colors text-lg">
+        <button @click="$emit('exit')" class="w-full sm:w-auto px-8 py-3 bg-white hover:bg-slate-50 text-slate-700 font-bold rounded-full shadow-sm border border-slate-200 transition-colors text-lg">
           Back to Flashcards
         </button>
       </div>
