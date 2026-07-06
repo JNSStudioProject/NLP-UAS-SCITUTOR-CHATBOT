@@ -25,47 +25,49 @@ app.use((err, req, res, next) => {
   console.error('Unhandled Error:', err);
   res.status(500).json({ error: { code: 'SERVER_ERROR', message: 'Internal Server Error' } });
 });
+// Only start listening when NOT running on Vercel (serverless)
+if (!process.env.VERCEL) {
+  const server = app.listen(config.PORT, () => {
+    console.log(`ask-scitutor backend running on port ${config.PORT}`);
+  });
 
-// Bootstrap
-const server = app.listen(config.PORT, () => {
-  console.log(`ask-scitutor backend running on port ${config.PORT}`);
-});
+  const shutdownSequence = async () => {
+    console.log('Shutdown signal received. Executing graceful shutdown sequence...');
+    server.close(async () => {
+      console.log('HTTP connections closed.');
+      try {
+        if (HfInferenceService._instance) {
+          await HfInferenceService._instance.destroy();
+          console.log('HfInferenceService cleaned up.');
+        }
+        process.exit(0);
+      } catch (err) {
+        console.error('Error during shutdown sequence:', err);
+        process.exit(1);
+      }
+    });
 
-const shutdownSequence = async () => {
-  console.log('Shutdown signal received. Executing graceful shutdown sequence...');
-  server.close(async () => {
-    console.log('HTTP connections closed.');
+    setTimeout(() => {
+      console.error('In-flight requests drain timeout. Force quitting.');
+      process.exit(1);
+    }, 10000);
+  };
+
+  process.on('SIGTERM', shutdownSequence);
+  process.on('SIGINT', shutdownSequence);
+
+  process.on('unhandledRejection', async (reason) => {
+    console.error('Unhandled Promise Rejection:', reason);
     try {
       if (HfInferenceService._instance) {
         await HfInferenceService._instance.destroy();
-        console.log('HfInferenceService cleaned up.');
       }
-      process.exit(0);
-    } catch (err) {
-      console.error('Error during shutdown sequence:', err);
-      process.exit(1);
+    } catch (e) {
+      console.error('Failed to cleanup HfInferenceService instance on unhandled rejection:', e);
     }
-  });
-
-  setTimeout(() => {
-    console.error('In-flight requests drain timeout. Force quitting.');
     process.exit(1);
-  }, 10000);
-};
-
-process.on('SIGTERM', shutdownSequence);
-process.on('SIGINT', shutdownSequence);
-
-process.on('unhandledRejection', async (reason) => {
-  console.error('Unhandled Promise Rejection:', reason);
-  try {
-    if (HfInferenceService._instance) {
-      await HfInferenceService._instance.destroy();
-    }
-  } catch (e) {
-    console.error('Failed to cleanup HfInferenceService instance on unhandled rejection:', e);
-  }
-  process.exit(1);
-});
+  });
+}
 
 module.exports = app;
+
