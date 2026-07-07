@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-4rem)] flex flex-col">
-    <!-- Header -->
+    <!-- Header (Bagian Atas Halaman) -->
     <div class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end flex-shrink-0 gap-4">
       <div>
         <h1 class="text-3xl font-bold text-slate-900">
@@ -19,7 +19,7 @@
       </button>
     </div>
 
-    <!-- Loading State -->
+    <!-- Tampilan Loading (Proses Pemuatan) -->
     <div v-if="isGenerating" class="w-full flex-1 flex flex-col items-center justify-center">
       <div class="max-w-4xl w-full mx-auto bg-white shadow-sm rounded-lg border border-purple-100 px-4 py-16 flex flex-col items-center justify-center space-y-4">
          <svg class="animate-spin h-10 w-10 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <!-- Empty State -->
+    <!-- Tampilan Kosong (Riwayat Belum Ada) -->
     <div v-else-if="quizData.length === 0" class="w-full flex-1 flex flex-col items-center justify-center">
       <div class="max-w-4xl w-full mx-auto bg-white shadow-sm rounded-lg border border-gray-200 px-4 py-16 flex flex-col items-center justify-center text-center">
          <span class="text-5xl mb-4">📭</span>
@@ -40,11 +40,11 @@
       </div>
     </div>
 
-    <!-- Quiz Content -->
+    <!-- Konten Kuis -->
     <div v-else class="w-full flex-1 flex flex-col">
       <div class="max-w-4xl mx-auto w-full space-y-6">
       
-      <!-- Score Display -->
+      <!-- Tampilan Nilai -->
       <div v-if="quizScore !== null" class="bg-white p-6 rounded-xl shadow-sm border mb-8 flex flex-col items-center transition-all duration-500"
            :class="quizScore === 100 ? 'border-green-200 bg-green-50' : (quizScore >= 60 ? 'border-yellow-200 bg-yellow-50' : 'border-red-200 bg-red-50')">
         <h2 class="text-xl font-bold mb-2 text-gray-800">Final Score For This Session</h2>
@@ -71,7 +71,7 @@
         </div>
       </div>
 
-      <!-- Question List -->
+      <!-- Daftar Pertanyaan -->
       <div v-for="(q, index) in quizData" :key="index" class="bg-white p-6 rounded-xl shadow-sm border border-purple-50 flex flex-col">
         <h3 class="font-semibold text-gray-900 text-lg mb-4">
           <span class="text-purple-600 mr-1">{{ index + 1 }}.</span> {{ q.question }}
@@ -133,7 +133,7 @@ import { useHistoryStore } from '@/stores/historyStore'
 const router = useRouter()
 const historyStore = useHistoryStore()
 
-// State
+// State (Variabel Reaktif)
 const isGenerating = ref(true)
 const currentPage = ref(0)
 const quizData = ref([])
@@ -195,7 +195,7 @@ const checkAnswers = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
-// Reuse the exact same generator logic from Quiz.vue
+// Gunakan ulang logika pembuat kuis yang sama persis seperti di Quiz.vue
 const generateDynamicQuiz = (text) => {
   if (!text || text.trim().length < 10) return []
 
@@ -211,7 +211,7 @@ const generateDynamicQuiz = (text) => {
   
   const generatedQuiz = []
 
-  // Type 1: Main Concept Extraction
+  // Tipe 1: Ekstraksi Konsep Utama
   if (allWords.length > 0) {
     const wordCounts = {}
     allWords.forEach(w => wordCounts[w.toLowerCase()] = (wordCounts[w.toLowerCase()] || 0) + 1)
@@ -240,7 +240,7 @@ const generateDynamicQuiz = (text) => {
     }
   }
 
-  // Type 2: Fact Checking
+  // Tipe 2: Pemeriksaan Fakta
   if (sentences.length > 0) {
     const validSentences = [...sentences].sort((a, b) => b.length - a.length)
     const factSentence = validSentences[0].trim()

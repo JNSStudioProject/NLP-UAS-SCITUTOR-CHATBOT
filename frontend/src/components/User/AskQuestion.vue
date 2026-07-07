@@ -1,15 +1,15 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Page Header -->
+    <!-- Header Halaman -->
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-gray-900">Ask a Science Question</h1>
       <p class="mt-2 text-sm text-gray-600">Type your question below and receive an AI-generated answer</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Left Column: Input and Response -->
+      <!-- Kolom Kiri: Input dan Respons -->
       <div class="lg:col-span-2 space-y-6">
-        <!-- Question Input Area -->
+        <!-- Area Input Pertanyaan -->
         <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
           <div class="px-4 py-5 sm:p-6">
             <label for="question" class="block text-sm font-medium text-gray-700 mb-2">
@@ -27,7 +27,7 @@
               ></textarea>
             </div>
             
-            <!-- Gatekeeper Progress Bar -->
+            <!-- Indikator Progres Penjaga Batas Token -->
             <div class="mt-4">
               <div class="flex justify-between items-center mb-1">
                 <span class="text-xs font-medium text-gray-500" :class="gatekeeperState.progressColor === 'red' ? 'text-red-600' : ''">
@@ -63,7 +63,7 @@
               </button>
             </div>
             
-            <!-- Error Alert -->
+            <!-- Peringatan Error -->
             <div v-if="apiError" class="mt-4 p-4 bg-red-50 rounded-md border border-red-200">
               <div class="flex">
                 <div class="flex-shrink-0">
@@ -82,7 +82,7 @@
           </div>
         </div>
 
-        <!-- Answer Display Section (After Submission) -->
+        <!-- Bagian Tampilan Jawaban (Setelah Dikirim) -->
         <div v-if="apiResponse" class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden transition-all duration-500 ease-in-out">
           <div class="border-b border-gray-200 bg-gray-50 px-4 py-3 sm:px-6">
             <h3 class="text-xs font-semibold text-gray-500 tracking-wider uppercase">Generated Answer</h3>
@@ -148,9 +148,9 @@
         </div>
       </div>
 
-      <!-- Right Column: Sidebar Panels -->
+      <!-- Kolom Kanan: Panel Sidebar -->
       <div class="space-y-6">
-        <!-- Example Questions Panel -->
+        <!-- Panel Contoh Pertanyaan -->
         <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
           <div class="border-b border-gray-200 bg-gray-50 px-4 py-3">
             <h3 class="text-xs font-semibold text-gray-500 tracking-wider uppercase">Try These Examples</h3>
@@ -171,7 +171,7 @@
           </div>
         </div>
 
-        <!-- Subject Filter (Optional) -->
+        <!-- Filter Kategori (Opsional) -->
         <div class="bg-white shadow-sm rounded-lg border border-gray-200 overflow-hidden">
           <div class="border-b border-gray-200 bg-gray-50 px-4 py-3">
             <h3 class="text-xs font-semibold text-gray-500 tracking-wider uppercase">Filter by Subject</h3>
@@ -199,15 +199,16 @@ import { useRoute, useRouter } from 'vue-router'
 import { usePredictStore } from '@/stores/predictStore'
 import questionsData from '@/assets/questions.json'
 
-// --- Store and Router ---
-const route = useRoute()
-const router = useRouter()
-// Using optional chaining or try/catch in case store is not yet implemented
+// --- Store dan Router (Alat Navigasi & Gudang Data) ---
+const route = useRoute() // Mengambil info URL saat ini
+const router = useRouter() // Alat untuk pindah halaman
 let predictStore
+
+// Memastikan bahwa Gudang Data Pinia (predictStore) tersedia
 try {
   predictStore = usePredictStore()
 } catch (e) {
-  // Mock store for layout visualization if Pinia is missing
+  // Jika gagal dimuat, buat store bohongan (Mock) agar web tidak crash
   predictStore = { 
     submitQuestion: async () => new Promise(res => setTimeout(res, 1000)),
     lastResult: { output: 'Mocked response.', tokensUsed: 15 },
@@ -216,33 +217,38 @@ try {
   }
 }
 
-// --- 3A: Reactive State (Refs) ---
-const inputText = ref('')
-const selectedSubject = ref('')
-const isSubmitting = ref(false)
-const apiResponse = ref(null)
-const apiError = ref(null)
-const latencyMs = ref(null)
-const serverTokensUsed = ref(null)
-const submittedQuestion = ref('') // Stores the question that was actually submitted
+// --- 3A: Reactive State (Variabel-variabel yang jika diubah, layar otomatis berubah) ---
+const inputText = ref('') // Menyimpan teks pertanyaan yang sedang diketik user
+const selectedSubject = ref('') // Kategori pelajaran yang dipilih (Biology, dll)
+const isSubmitting = ref(false) // Penanda apakah sedang loading nunggu balasan AI
+const apiResponse = ref(null) // Menyimpan teks Jawaban dari AI
+const apiError = ref(null) // Menyimpan pesan error jika ada kegagalan
+const latencyMs = ref(null) // Kecepatan respons server
+const serverTokensUsed = ref(null) // Jumlah token yang terpakai
+const submittedQuestion = ref('') // Menyimpan teks persis seperti yang dikirim ke AI
 
-// --- Data for UI ---
+// --- Data untuk UI (Untuk tampilan daftar contoh pertanyaan di kanan layar) ---
 const exampleQuestions = ref([])
 
+// Fungsi untuk mengacak dan mengambil 6 contoh pertanyaan dari file JSON
 const refreshExampleQuestions = () => {
   let filtered = questionsData
+  // Jika user memilih kategori tertentu, saring pertanyaannya
   if (selectedSubject.value) {
     filtered = questionsData.filter(q => q.subject === selectedSubject.value)
     if (filtered.length === 0) filtered = questionsData
   }
   
+  // Acak urutan pertanyaan
   const shuffled = [...filtered].sort(() => 0.5 - Math.random())
   exampleQuestions.value = shuffled.slice(0, 6).map(q => q.question)
 }
 
+// Saat halaman web AskQuestion.vue ini pertama kali dimuat/dibuka oleh browser
 onMounted(() => {
-  refreshExampleQuestions()
+  refreshExampleQuestions() // Muat contoh pertanyaan
   
+  // Jika sebelumnya user sudah nanya (masih ada di memori store), tampilkan kembali otomatis
   if (predictStore && predictStore.lastResult) {
     inputText.value = predictStore.lastInput || ''
     apiResponse.value = predictStore.lastResult.output || ''
@@ -252,6 +258,7 @@ onMounted(() => {
   }
 })
 
+// Daftar Kategori Pelajaran
 const subjects = [
   { id: 'all', label: 'All' },
   { id: 'biology', label: 'Biology' },
@@ -260,95 +267,68 @@ const subjects = [
   { id: 'mathematics', label: 'Mathematics' }
 ]
 
-// --- 3B: Token Gatekeeper Core Logic ---
-const TOKEN_MULTIPLIER = 1.3
-const HARD_LIMIT = 42
-const WARN_THRESHOLD = 34
-const CAUTION_THRESHOLD = 25
+// --- 3B: Token Gatekeeper Core Logic (Sistem Penjaga Batas Kata) ---
+const TOKEN_MULTIPLIER = 1.3 // Perkiraan: 1 kata = ~1.3 token mesin
+const HARD_LIMIT = 42 // Batas maksimal token yang diperbolehkan server
+const WARN_THRESHOLD = 34 // Batas Peringatan Oranye
+const CAUTION_THRESHOLD = 25 // Batas Waspada Kuning
 
+// Menghitung jumlah kata
 const wordCount = computed(() => {
   const trimmed = inputText.value.trim()
   return trimmed === '' ? 0 : trimmed.split(/\s+/).length
 })
 
+// Menghitung jumlah karakter huruf
 const charCount = computed(() => inputText.value.length)
 
+// Menghitung perkiraan pemakaian token
 const estimatedTokens = computed(() => Math.ceil(wordCount.value * TOKEN_MULTIPLIER))
 
+// Menghitung sisa kuota token
 const tokenBudgetRemaining = computed(() => Math.max(0, HARD_LIMIT - estimatedTokens.value))
 
+// Menghitung persen Bar (Progress Bar UI)
 const tokenUsagePercent = computed(() => Math.min(100, Math.round((estimatedTokens.value / HARD_LIMIT) * 100)))
 
-// --- 3C: Gatekeeper State Machine ---
+// --- 3C: Gatekeeper State Machine (Pengatur Logika Tombol & Warna Bar) ---
 const gatekeeperState = computed(() => {
   const tokens = estimatedTokens.value
   const loading = isSubmitting.value
   
+  // Jika sedang proses nunggu AI (Kondisi Loading)
   if (loading) {
-    return {
-      submitBlocked: true,
-      blockReason: 'REQUEST_IN_FLIGHT',
-      progressColor: 'blue',
-      progressLabel: 'Processing...',
-      feedbackMsg: null
-    }
+    return { submitBlocked: true, blockReason: 'REQUEST_IN_FLIGHT', progressColor: 'blue', progressLabel: 'Processing...', feedbackMsg: null }
   }
   
+  // Jika teks kosong
   if (inputText.value.trim() === '') {
-    return {
-      submitBlocked: true,
-      blockReason: 'EMPTY_INPUT',
-      progressColor: 'neutral',
-      progressLabel: '0 / 42 tokens',
-      feedbackMsg: null
-    }
+    return { submitBlocked: true, blockReason: 'EMPTY_INPUT', progressColor: 'neutral', progressLabel: '0 / 42 tokens', feedbackMsg: null }
   }
   
+  // Jika melewati batas maksimal (Warna Merah)
   if (tokens >= HARD_LIMIT) {
-    return {
-      submitBlocked: true,
-      blockReason: 'TOKEN_LIMIT_EXCEEDED',
-      progressColor: 'red',
-      progressLabel: '{estimatedTokens} / 42 — LIMIT EXCEEDED',
-      feedbackMsg: 'Question too long. Remove {overflow} word(s) to continue.',
-      overflow: tokens - HARD_LIMIT
-    }
+    return { submitBlocked: true, blockReason: 'TOKEN_LIMIT_EXCEEDED', progressColor: 'red', progressLabel: '{estimatedTokens} / 42 — LIMIT EXCEEDED', feedbackMsg: 'Question too long. Remove {overflow} word(s) to continue.', overflow: tokens - HARD_LIMIT }
   }
   
+  // Jika mendekati limit (Warna Oranye)
   if (tokens >= WARN_THRESHOLD) {
-    return {
-      submitBlocked: false,
-      blockReason: null,
-      progressColor: 'orange',
-      progressLabel: '{estimatedTokens} / 42 tokens — {remaining} left!',
-      feedbackMsg: 'Almost at the limit. Shorten your question.'
-    }
+    return { submitBlocked: false, blockReason: null, progressColor: 'orange', progressLabel: '{estimatedTokens} / 42 tokens — {remaining} left!', feedbackMsg: 'Almost at the limit. Shorten your question.' }
   }
   
+  // Jika lumayan panjang (Warna Kuning)
   if (tokens >= CAUTION_THRESHOLD) {
-    return {
-      submitBlocked: false,
-      blockReason: null,
-      progressColor: 'yellow',
-      progressLabel: '{estimatedTokens} / 42 tokens — {remaining} remaining',
-      feedbackMsg: 'Getting close to the limit. Try to be concise.'
-    }
+    return { submitBlocked: false, blockReason: null, progressColor: 'yellow', progressLabel: '{estimatedTokens} / 42 tokens — {remaining} remaining', feedbackMsg: 'Getting close to the limit. Try to be concise.' }
   }
   
-  // SAFE State
-  return {
-    submitBlocked: false,
-    blockReason: null,
-    progressColor: 'green',
-    progressLabel: '{estimatedTokens} / 42 tokens',
-    feedbackMsg: null
-  }
+  // Jika aman sentosa (Warna Hijau)
+  return { submitBlocked: false, blockReason: null, progressColor: 'green', progressLabel: '{estimatedTokens} / 42 tokens', feedbackMsg: null }
 })
 
-// --- 3D: Master Submit Disabled State ---
+// --- 3D: Penentu apakah tombol Submit dimatikan (Disabled) ---
 const isSubmitDisabled = computed(() => gatekeeperState.value.submitBlocked === true)
 
-// --- 3E: Progress Bar Computed Properties ---
+// --- 3E: Logika Pengubah Warna Progress Bar ---
 const progressBar = computed(() => {
   const colorMap = {
     'neutral': 'bg-gray-300',
@@ -358,72 +338,58 @@ const progressBar = computed(() => {
     'red': 'bg-red-500 animate-pulse',
     'blue': 'bg-blue-500 animate-pulse'
   }
-  
-  return {
-    width: `${tokenUsagePercent.value}%`,
-    colorClass: colorMap[gatekeeperState.value.progressColor] || 'bg-gray-300',
-    animate: gatekeeperState.value.progressColor === 'red' || gatekeeperState.value.progressColor === 'blue'
-  }
+  return { width: `${tokenUsagePercent.value}%`, colorClass: colorMap[gatekeeperState.value.progressColor] || 'bg-gray-300', animate: gatekeeperState.value.progressColor === 'red' || gatekeeperState.value.progressColor === 'blue' }
 })
 
-// --- 3F: Word Overflow Highlight (Logic implemented, ready for future template usage) ---
+// --- 3F: Menyorot Kata yang Lebih (Bila kepanjangan) ---
 const overflowWordIndex = computed(() => {
   const words = inputText.value.trim().split(/\s+/)
   const safeWordCount = Math.floor(HARD_LIMIT / TOKEN_MULTIPLIER)
-  return {
-    safeWords: words.slice(0, safeWordCount),
-    overflowWords: words.slice(safeWordCount),
-    overflowCount: Math.max(0, words.length - safeWordCount)
-  }
+  return { safeWords: words.slice(0, safeWordCount), overflowWords: words.slice(safeWordCount), overflowCount: Math.max(0, words.length - safeWordCount) }
 })
 
-// --- 3G: Form Submit Action Blueprint ---
+// --- 3G: Fungsi Tombol Submit Utama ---
 const handleSubmit = async () => {
-  if (isSubmitDisabled.value) return
+  if (isSubmitDisabled.value) return // Cegah diklik dua kali atau diklik saat error
   
-  isSubmitting.value = true
-  apiError.value = null
-  apiResponse.value = null
+  isSubmitting.value = true // Nyalakan animasi Putar (Loading)
+  apiError.value = null // Bersihkan pesan error lama
+  apiResponse.value = null // Bersihkan jawaban lama dari layar
   submittedQuestion.value = inputText.value
   
-  const startTime = Date.now()
-  
+  const startTime = Date.now() // Mulai stopwatch
+  //start p
   try {
+    // Meminta predictStore untuk menghubungi Backend dan menunggu
     await predictStore.submitQuestion({ input: inputText.value })
-    latencyMs.value = Date.now() - startTime
+    latencyMs.value = Date.now() - startTime // Hentikan stopwatch
     
-    // Check results from store
+    // Tampilkan jawaban AI ke layar (disimpan ke variabel apiResponse)
     if (predictStore.lastResult) {
       apiResponse.value = predictStore.lastResult.output || 'Response generated successfully.'
       serverTokensUsed.value = predictStore.lastResult.tokensUsed || estimatedTokens.value
     } else {
-      // Fallback
       apiResponse.value = 'Response received, but format was unexpected.'
       serverTokensUsed.value = estimatedTokens.value
     }
   } catch (error) {
+    // Tangkap kode error dari backend dan tampilkan dalam bahasa manusia yang ramah
     const status = error.response?.status || error.status
-    
-    if (status === 422) {
-      apiError.value = 'INPUT_TOKEN_LIMIT_EXCEEDED'
-    } else if (status === 503) {
-      apiError.value = 'MODEL_BUSY — try again in a moment'
-    } else if (status === 429) {
-      apiError.value = 'RATE_LIMIT — wait before submitting again'
-    } else {
-      apiError.value = predictStore.error || error.message || 'An unexpected error occurred communicating with the API.'
-    }
+    if (status === 422) { apiError.value = 'INPUT_TOKEN_LIMIT_EXCEEDED' } 
+    else if (status === 503) { apiError.value = 'MODEL_BUSY — try again in a moment' } 
+    else if (status === 429) { apiError.value = 'RATE_LIMIT — wait before submitting again' } 
+    else { apiError.value = predictStore.error || error.message || 'An unexpected error occurred communicating with the API.' }
   } finally {
-    isSubmitting.value = false
+    isSubmitting.value = false // Matikan animasi Loading setelah semua selesai
   }
 }
 
-// --- Methods ---
-const fillExample = (text) => {
-  inputText.value = text
-  inputText.value = text // Trigger reactivity
-}
+// --- Methods (Fungsi-Fungsi Pendukung UI) ---
 
+// Fungsi saat tulisan contoh diklik (otomatis masuk ke kotak teks)
+const fillExample = (text) => { inputText.value = text }
+
+// Fungsi saat tombol Ask Another Question diklik (Mereset halaman jadi bersih)
 const resetForm = () => {
   inputText.value = ''
   apiResponse.value = null
@@ -433,31 +399,29 @@ const resetForm = () => {
   }
 }
 
+// Fungsi saat tombol Copy Answer diklik
 const copyAnswer = async () => {
   if (apiResponse.value && navigator.clipboard) {
-    try {
-      await navigator.clipboard.writeText(apiResponse.value)
-      // Visual feedback could be added here
-    } catch (err) {
-      console.error('Failed to copy text: ', err)
-    }
+    try { await navigator.clipboard.writeText(apiResponse.value) } 
+    catch (err) { console.error('Failed to copy text: ', err) }
   }
 }
 
+// Fungsi saat tombol Kategori diklik
 const setSubject = (subject) => {
   selectedSubject.value = subject.id === 'all' ? '' : subject.label
   refreshExampleQuestions()
 }
 
+// Cek apakah tombol kategori tersebut sedang aktif diklik
 const isSelectedSubject = (subject) => {
   if (subject.id === 'all') return selectedSubject.value === ''
   return selectedSubject.value === subject.label
 }
 
-// --- 3H: Watchers ---
+// --- 3H: Watchers (Pengawas Variabel Layar) ---
+// Awasi kotak teks: jika user mengetik sesuatu yang baru, hapus jawaban AI yang lama dari layar agar tidak bingung
 watch(inputText, (newVal) => {
-  // Reset apiResponse and apiError to null on new input (clear stale results)
-  // Only if the new input is actually different from what was just submitted/restored
   if (newVal !== submittedQuestion.value) {
     if (apiResponse.value || apiError.value) {
       apiResponse.value = null
@@ -466,7 +430,8 @@ watch(inputText, (newVal) => {
   }
 }, { immediate: false })
 
-// --- Quiz Logic ---
+// --- Logika Kuis ---
+// Fungsi saat tombol "🧠 Test Understanding" diklik (Mengarahkan/melempar user ke halaman kuis)
 const generateQuiz = () => {
   router.push({
     name: 'Quiz',
@@ -477,11 +442,11 @@ const generateQuiz = () => {
   })
 }
 
+// Awasi URL Web: jika user datang membawa parameter kategori (misal /ask?subject=biology), sesuaikan!
 watch(() => route?.query?.subject, (newSubject) => {
   if (newSubject) {
     selectedSubject.value = newSubject.toString()
     refreshExampleQuestions()
   }
 }, { immediate: true })
-
 </script>

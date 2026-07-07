@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-4rem)] flex flex-col">
-    <!-- Header Dashboard (Hidden in Game Mode) -->
+    <!-- Header Dashboard (Disembunyikan saat Mode Game) -->
     <div v-if="viewMode !== 'game'" class="mb-8 flex flex-col md:flex-row justify-between items-start md:items-end flex-shrink-0 gap-4">
       <div>
         <h1 class="text-3xl font-bold text-slate-900">
@@ -10,7 +10,7 @@
       </div>
       
       <div v-if="hasCards" class="flex flex-wrap items-center gap-4 w-full md:w-auto mt-4 md:mt-0">
-        <!-- Stats -->
+        <!-- Statistik -->
         <div class="flex items-center gap-4 sm:gap-6 bg-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-full shadow-sm border border-slate-200">
           <div class="flex flex-col items-center">
             <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total</span>
@@ -29,7 +29,7 @@
         </div>
 
         <div v-if="hasCards" class="flex flex-wrap items-center gap-2">
-          <!-- Play Game Button (Always available) -->
+          <!-- Tombol Main Game (Selalu tersedia) -->
           <button 
             @click="viewMode = 'game'"
             class="px-4 py-2.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-bold rounded-full transition-colors mr-2 border border-indigo-200"
@@ -38,7 +38,7 @@
             Play Game
           </button>
 
-          <!-- Study Due Button -->
+          <!-- Tombol Pelajari yang Jatuh Tempo -->
           <button 
             v-if="flashcardStore.cardsToReview.length > 0"
             @click="startStudy(false)"
@@ -48,7 +48,7 @@
             Study Due
           </button>
           
-          <!-- Practice All Button (Shows when Due is 0) -->
+          <!-- Tombol Latihan Semua (Muncul saat tidak ada yang Jatuh Tempo) -->
           <button 
             v-else
             @click="startStudy(true)"
@@ -69,7 +69,7 @@
       </div>
     </div>
 
-    <!-- Empty State -->
+    <!-- Tampilan Kosong (Belum ada Flashcard) -->
     <div v-if="!hasCards" class="flex-1 flex flex-col justify-center items-center p-12 text-gray-500 bg-white rounded-lg shadow-sm border border-gray-200">
       <div class="text-6xl mb-4">⭐</div>
       <p class="text-xl font-medium text-gray-900 mb-2">No flashcards yet!</p>
@@ -79,11 +79,11 @@
       </button>
     </div>
 
-    <!-- STUDY MODE -->
+    <!-- MODE BELAJAR -->
     <div v-else-if="viewMode === 'study'" class="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full">
       <div v-if="!currentStudyCard" class="text-center p-12 bg-emerald-50 rounded-2xl border border-emerald-100 w-full shadow-sm animate-fade-in relative overflow-hidden">
         
-        <!-- Challenge Popup Overlay -->
+        <!-- Popup Tantangan -->
         <div v-if="showChallengePopup" class="absolute inset-0 bg-slate-900/95 flex flex-col items-center justify-center p-6 z-10 animate-fade-in">
           <div class="text-6xl mb-4 animate-bounce">🔥</div>
           <h3 class="text-2xl font-black text-white mb-2">Brain is Warmed Up!</h3>
@@ -98,7 +98,7 @@
           </div>
         </div>
 
-        <!-- Standard Caught Up UI (Behind popup) -->
+        <!-- UI Standar Selesai Belajar (Di belakang popup) -->
         <div :class="{'opacity-0 pointer-events-none': showChallengePopup}" class="transition-opacity duration-300">
           <div class="text-6xl mb-4 animate-bounce">🎉</div>
           <h2 class="text-2xl font-bold text-emerald-800 mb-2">You're all caught up!</h2>
@@ -116,10 +116,10 @@
       </div>
 
       <div v-else class="w-full flex flex-col items-center">
-        <!-- Progress Text -->
+        <!-- Teks Progres -->
         <p class="text-sm font-medium text-slate-500 mb-4 uppercase tracking-wider">Reviewing Card</p>
 
-        <!-- The Study Card -->
+        <!-- Kartu Belajar -->
         <div 
           class="card-container w-full perspective-1000 relative cursor-pointer"
           style="height: 400px;"
@@ -127,7 +127,7 @@
         >
           <div class="card-inner w-full h-full relative transition-transform duration-500 transform-style-preserve-3d" :class="{ 'is-flipped': showAnswer }">
             
-            <!-- Front (Question) -->
+            <!-- Bagian Depan (Pertanyaan) -->
             <div class="card-front absolute w-full h-full bg-white rounded-2xl shadow-xl border border-slate-200 p-8 flex flex-col justify-between backface-hidden">
               <div class="flex justify-between items-center mb-4">
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase bg-slate-100 text-slate-800 border border-slate-200">
@@ -149,7 +149,7 @@
               </div>
             </div>
 
-            <!-- Back (Answer) -->
+            <!-- Bagian Belakang (Jawaban) -->
             <div class="card-back absolute w-full h-full bg-slate-800 text-white rounded-2xl shadow-xl border border-slate-700 p-8 flex flex-col backface-hidden rotate-y-180 overflow-hidden">
                <div class="flex justify-between items-center mb-6 flex-shrink-0">
                  <span class="text-xs font-semibold text-slate-300 uppercase tracking-widest">Answer</span>
@@ -165,7 +165,7 @@
           </div>
         </div>
 
-        <!-- Rating Buttons (Only show when answer is revealed) -->
+        <!-- Tombol Penilaian (Hanya muncul saat jawaban terbuka) -->
         <div class="mt-8 h-20 flex items-center justify-center w-full">
           <div v-if="showAnswer" class="flex gap-4 w-full max-w-lg">
             <button @click.stop="rateCard(0)" class="flex-1 flex flex-col items-center justify-center p-3 rounded-xl bg-rose-100 text-rose-700 border border-rose-200 hover:bg-rose-200 transition-colors">
@@ -185,19 +185,19 @@
       </div>
     </div>
 
-    <!-- COUNTDOWN MODE -->
+    <!-- MODE HITUNG MUNDUR -->
     <div v-else-if="viewMode === 'countdown'" class="flex-1 flex flex-col items-center justify-center w-full animate-fade-in">
       <div class="text-[12rem] font-black bg-clip-text text-transparent bg-gradient-to-br from-indigo-500 to-purple-700 drop-shadow-2xl animate-pulse">
         {{ countdownValue > 0 ? countdownValue : 'GO!' }}
       </div>
     </div>
 
-    <!-- GAME MODE -->
+    <!-- MODE GAME -->
     <div v-else-if="viewMode === 'game'" class="w-full h-full flex-1 animate-fade-in">
       <MemoryGame :flashcards="flashcardStore.cards" @exit="viewMode = 'grid'" />
     </div>
 
-    <!-- GRID MODE -->
+    <!-- MODE GRID (KOTAK-KOTAK) -->
     <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div 
         v-for="card in flashcardStore.cards" 
@@ -206,7 +206,7 @@
         style="height: 320px;"
         @click="toggleFlip(card.id)"
       >
-        <!-- Delete Button -->
+        <!-- Tombol Hapus -->
         <button 
           @click.stop="confirmDelete(card.id)"
           class="absolute top-3 right-3 p-2 bg-rose-50 text-rose-400 hover:bg-rose-100 hover:text-rose-600 rounded-full opacity-0 group-hover:opacity-100 transition-all z-10"
@@ -215,7 +215,7 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
 
-        <!-- Due indicator -->
+        <!-- Indikator Jatuh Tempo -->
         <div v-if="isDue(card.nextReviewDate)" class="absolute -top-2 -left-2 z-20 bg-amber-500 text-white text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full shadow-md">
           Due
         </div>
@@ -261,7 +261,7 @@
       </div>
     </div>
 
-    <!-- Custom Delete Confirmation Modal -->
+    <!-- Modal Konfirmasi Penghapusan Kustom -->
     <div v-if="showDeleteModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-4 animate-fade-in">
       <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 transform transition-all text-center">
         <div class="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -293,7 +293,7 @@ import MemoryGame from './MemoryGame.vue'
 
 const flashcardStore = useFlashcardStore()
 
-// State
+// State (Variabel Reaktif)
 const viewMode = ref('grid') // 'grid' | 'study' | 'game' | 'countdown'
 const flippedCards = ref({})
 const showAnswer = ref(false)
@@ -303,13 +303,13 @@ const countdownValue = ref(3)
 const showDeleteModal = ref(false)
 const deleteTarget = ref(null)
 
-// Computed
+// Computed (Nilai yang dihitung otomatis)
 const hasCards = computed(() => flashcardStore.cardCount > 0)
 const currentStudyCard = computed(() => {
   return localStudyQueue.value.length > 0 ? localStudyQueue.value[0] : null
 })
 
-// Methods
+// Methods (Fungsi-Fungsi)
 const isDue = (dateString) => {
   if (!dateString) return true;
   return new Date(dateString) <= new Date();
@@ -326,10 +326,10 @@ const startStudy = (practiceAll = false) => {
   showAnswer.value = false
   
   if (practiceAll) {
-    // Shuffle all cards for practice
+    // Acak semua kartu untuk latihan
     localStudyQueue.value = [...flashcardStore.cards].sort(() => 0.5 - Math.random())
   } else {
-    // Just the due ones
+    // Hanya kartu yang sudah jatuh tempo (due)
     localStudyQueue.value = [...flashcardStore.cardsToReview]
   }
 }
@@ -339,25 +339,25 @@ const rateCard = (quality) => {
   
   const cardId = currentStudyCard.value.id;
   
-  // Rate the card in store
+  // Berikan nilai pada kartu di store
   flashcardStore.reviewCard(cardId, quality);
   
-  // Remove from local queue
+  // Hapus dari antrean lokal
   const finishedCard = localStudyQueue.value.shift();
   
-  // If they forgot, put it at the back of the queue to review again in this session
+  // Jika lupa, taruh lagi di belakang antrean untuk diulang di sesi ini
   if (quality < 3) {
     localStudyQueue.value.push(finishedCard);
   }
   
-  // Trigger popup if session is complete
+  // Munculkan popup jika sesi sudah selesai
   if (localStudyQueue.value.length === 0) {
     setTimeout(() => {
       showChallengePopup.value = true;
     }, 600);
   }
   
-  // Reset UI for next card
+  // Atur ulang UI untuk kartu berikutnya
   showAnswer.value = false;
 }
 
